@@ -1,0 +1,90 @@
+<!-- 空间详情页 — 邀请码、成员管理、清单列表 -->
+<view class="page">
+  <view class="section" wx:if="{{space}}">
+    <text class="section-title">{{space.name}}</text>
+    <text class="section-sub">{{space.type === 'personal' ? '个人空间' : '共享空间'}}</text>
+  </view>
+
+  <!-- 清单列表 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">清单</text>
+      <text class="add-btn" bindtap="onCreateListTap">+ 新建</text>
+    </view>
+    <view class="list-item" wx:for="{{lists}}" wx:key="_id"
+      data-id="{{item._id}}" bindtap="onListTap">
+      <view class="list-dot" style="background:{{item.color}}"></view>
+      <text class="list-name">{{item.name}}</text>
+      <text class="arrow">›</text>
+    </view>
+    <view class="empty-hint" wx:if="{{lists.length === 0}}">暂无清单</view>
+  </view>
+
+  <!-- 共享空间功能 -->
+  <block wx:if="{{space && space.type === 'shared'}}">
+    <view class="section">
+      <text class="section-title">邀请成员</text>
+      <view class="invite-row">
+        <text class="invite-code">{{inviteCode || '点击生成邀请码'}}</text>
+        <button class="btn-primary small" bindtap="onGenerateInvite">生成</button>
+      </view>
+    </view>
+
+    <view class="section">
+      <text class="section-title">成员 ({{members.length}})</text>
+      <view class="member-item" wx:for="{{members}}" wx:key="userId">
+        <text class="member-name">{{item.userId}}</text>
+        <text class="member-role">{{item.role === 'owner' ? '所有者' : '成员'}}</text>
+        <text class="remove-btn" wx:if="{{isOwner && item.role !== 'owner'}}"
+          data-uid="{{item.userId}}" bindtap="onRemoveMember">移除</text>
+      </view>
+    </view>
+
+    <view class="section" wx:if="{{isOwner}}">
+      <button class="btn-plain danger" bindtap="onDeleteSpace">删除空间</button>
+    </view>
+  </block>
+
+  <!-- 加入空间 -->
+  <view class="section">
+    <button class="btn-primary" bindtap="onTapJoin">通过邀请码加入空间</button>
+  </view>
+</view>
+
+<!-- 新建清单弹层 -->
+<view class="modal-overlay" wx:if="{{showCreateList}}" catchtap="onCancelCreateList">
+  <view class="modal-content" catchtap="">
+    <text class="modal-title">新建清单</text>
+    <input class="input-field" placeholder="清单名称" value="{{newListName}}"
+      bindinput="onListNameInput" focus />
+    <view class="colors">
+      <view class="color-dot {{newListColor === '#07c160' ? 'active' : ''}}"
+        style="background:#07c160" data-color="#07c160" bindtap="onPickColor"></view>
+      <view class="color-dot {{newListColor === '#1989fa' ? 'active' : ''}}"
+        style="background:#1989fa" data-color="#1989fa" bindtap="onPickColor"></view>
+      <view class="color-dot {{newListColor === '#ee0a24' ? 'active' : ''}}"
+        style="background:#ee0a24" data-color="#ee0a24" bindtap="onPickColor"></view>
+      <view class="color-dot {{newListColor === '#ff976a' ? 'active' : ''}}"
+        style="background:#ff976a" data-color="#ff976a" bindtap="onPickColor"></view>
+      <view class="color-dot {{newListColor === '#ffc300' ? 'active' : ''}}"
+        style="background:#ffc300" data-color="#ffc300" bindtap="onPickColor"></view>
+    </view>
+    <view class="modal-actions">
+      <button class="btn-plain" bindtap="onCancelCreateList">取消</button>
+      <button class="btn-primary" bindtap="onConfirmCreateList">创建</button>
+    </view>
+  </view>
+</view>
+
+<!-- 加入空间弹层 -->
+<view class="modal-overlay" wx:if="{{showJoin}}" catchtap="onCancelJoin">
+  <view class="modal-content" catchtap="">
+    <text class="modal-title">输入邀请码</text>
+    <input class="input-field" placeholder="邀请码" value="{{joinCode}}"
+      bindinput="onJoinCodeInput" focus />
+    <view class="modal-actions">
+      <button class="btn-plain" bindtap="onCancelJoin">取消</button>
+      <button class="btn-primary" bindtap="onJoinByCode">加入</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,32 @@
+<!-- 空间列表页 -->
+<view class="page">
+  <view class="card" wx:for="{{spaces}}" wx:key="_id">
+    <view class="space-row" data-id="{{item._id}}" data-name="{{item.name}}"
+      bindtap="onSwitchSpace">
+      <view class="space-info">
+        <text class="space-name">{{item.name}}</text>
+        <text class="space-type">{{item.type === 'personal' ? '个人空间' : '共享空间'}}</text>
+      </view>
+      <view class="space-actions">
+        <text class="detail-btn" data-id="{{item._id}}" catchtap="onSpaceDetail">详情</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card create-btn" bindtap="onCreateTap">
+    <text class="create-icon">+</text>
+    <text class="create-text">新建共享空间</text>
+  </view>
+</view>
+
+<view class="modal-overlay" wx:if="{{showCreate}}">
+  <view class="modal-content">
+    <text class="modal-title">新建共享空间</text>
+    <input class="input-field" placeholder="空间名称" value="{{newSpaceName}}"
+      bindinput="onNameInput" focus />
+    <view class="modal-actions">
+      <button class="btn-plain" bindtap="onCancelCreate">取消</button>
+      <button class="btn-primary" bindtap="onConfirmCreate">创建</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/spaces/spaces",
+    "pages/space/space",
+    "pages/list/list",
+    "pages/plan/plan"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTitleText": "俊神清单",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f5f5f5"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#07c160",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "今天",
+        "iconPath": "images/today.png",
+        "selectedIconPath": "images/today-active.png"
+      },
+      {
+        "pagePath": "pages/spaces/spaces",
+        "text": "空间",
+        "iconPath": "images/space.png",
+        "selectedIconPath": "images/space-active.png"
+      },
+      {
+        "pagePath": "pages/plan/plan",
+        "text": "计划",
+        "iconPath": "images/plan.png",
+        "selectedIconPath": "images/plan-active.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,146 @@
+.page { padding-bottom: 120rpx; }
+
+.plan-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.plan-info { flex: 1; min-width: 0; }
+
+.plan-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  display: block;
+}
+
+.plan-rule {
+  font-size: 24rpx;
+  color: var(--color-primary);
+  margin-top: 6rpx;
+  display: block;
+}
+
+.plan-note {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 4rpx;
+  display: block;
+}
+
+.plan-actions {
+  display: flex;
+  gap: 20rpx;
+  align-items: center;
+}
+
+.action-btn {
+  font-size: 28rpx;
+  color: #ccc;
+  padding: 8rpx;
+}
+
+.empty {
+  text-align: center;
+  padding: 120rpx 0;
+  color: #ccc;
+}
+
+.empty .sub {
+  display: block;
+  font-size: 24rpx;
+  margin-top: 8rpx;
+}
+
+.fab {
+  position: fixed;
+  bottom: 120rpx;
+  right: 40rpx;
+  width: 100rpx;
+  height: 100rpx;
+  background: var(--color-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 24rpx rgba(7, 193, 96, 0.4);
+  z-index: 50;
+}
+
+.fab-text { color: #fff; font-size: 56rpx; line-height: 1; }
+
+.form-content {
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.form-label {
+  font-size: 26rpx;
+  color: #666;
+  margin: 20rpx 0 10rpx;
+}
+
+.rule-options {
+  display: flex;
+  gap: 16rpx;
+}
+
+.rule-chip {
+  padding: 12rpx 24rpx;
+  border-radius: 8rpx;
+  background: #f0f0f0;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.rule-chip.active {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.weekday-picker {
+  display: flex;
+  gap: 12rpx;
+  margin-top: 16rpx;
+}
+
+.weekday-chip {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  color: #666;
+}
+
+.weekday-chip.active {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.picker-value {
+  background: #f8f8f8;
+  border-radius: 8rpx;
+  padding: 16rpx 20rpx;
+  font-size: 26rpx;
+  color: #999;
+}
+
+.textarea { margin-top: 0; min-height: 120rpx; }
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-bottom: 24rpx;
+  display: block;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 32rpx;
+}
+
+.modal-actions button { flex: 1; margin: 0; }

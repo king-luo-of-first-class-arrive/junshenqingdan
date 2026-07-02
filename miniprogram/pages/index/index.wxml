@@ -1,0 +1,70 @@
+<!-- 今日首页 — 空间切换 + 按清单分组的任务列表 -->
+<view class="page">
+  <view class="header">
+    <view class="space-switcher" bindtap="onSpaceSwitch">
+      <text class="space-name">{{currentSpaceName}}</text>
+      <text class="switch-icon">▾</text>
+    </view>
+    <view class="date-label">{{today}}</view>
+  </view>
+
+  <block wx:for="{{lists}}" wx:key="_id" wx:for-item="list">
+    <view class="list-group">
+      <view class="list-header">
+        <view class="list-dot" style="background:{{list.color}}"></view>
+        <text class="list-name">{{list.name}}</text>
+        <text class="list-count">{{tasksByList[list._id].tasks.length}}</text>
+      </view>
+
+      <view class="task-item {{task.done ? 'done' : ''}}"
+        wx:for="{{tasksByList[list._id].tasks}}" wx:key="_id" wx:for-item="task">
+        <view class="task-check" data-id="{{task._id}}" data-done="{{task.done}}"
+          bindtap="onToggleTask">
+          <text>{{task.done ? '✓' : '○'}}</text>
+        </view>
+        <text class="task-title">{{task.title}}</text>
+      </view>
+
+      <view class="add-task-row" data-listid="{{list._id}}" bindtap="onAddTask">
+        <text class="add-icon">+</text>
+        <text class="add-text">添加任务</text>
+      </view>
+    </view>
+  </block>
+
+  <view class="list-group" wx:if="{{tasksByList['_none'].tasks.length > 0}}">
+    <view class="list-header">
+      <view class="list-dot" style="background:#ccc"></view>
+      <text class="list-name">未分类</text>
+    </view>
+    <view class="task-item {{task.done ? 'done' : ''}}"
+      wx:for="{{tasksByList['_none'].tasks}}" wx:key="_id" wx:for-item="task">
+      <view class="task-check" data-id="{{task._id}}" data-done="{{task.done}}"
+        bindtap="onToggleTask">
+        <text>{{task.done ? '✓' : '○'}}</text>
+      </view>
+      <text class="task-title">{{task.title}}</text>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{lists.length === 0}}">
+    <text>今天还没有任务，点击下方 + 添加</text>
+  </view>
+</view>
+
+<!-- 快速添加任务弹层 -->
+<view class="modal-overlay" wx:if="{{addingToList !== '' && addingToList !== undefined}}" catchtap="onCancelAdd">
+  <view class="modal-content" catchtap="">
+    <text class="modal-title">新建任务</text>
+    <input class="input-field" placeholder="任务标题" value="{{newTaskTitle}}"
+      bindinput="onTaskTitleInput" focus />
+    <view class="modal-actions">
+      <button class="btn-plain" bindtap="onCancelAdd">取消</button>
+      <button class="btn-primary" bindtap="onConfirmAdd">确定</button>
+    </view>
+  </view>
+</view>
+
+<view class="fab" bindtap="onFabAdd">
+  <text class="fab-text">+</text>
+</view>

@@ -1,0 +1,84 @@
+<!-- 计划页 — 周期任务管理，表单式创建 -->
+<view class="page">
+  <view class="card" wx:for="{{recurringTasks}}" wx:key="_id">
+    <view class="plan-row">
+      <view class="plan-info" data-id="{{item._id}}" bindtap="onEditTap">
+        <text class="plan-title">{{item.title}}</text>
+        <text class="plan-rule">{{item.ruleDesc}}</text>
+        <text class="plan-note" wx:if="{{item.note}}">{{item.note}}</text>
+      </view>
+      <view class="plan-actions">
+        <text class="action-btn" data-id="{{item._id}}" catchtap="onDelete">✕</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty" wx:if="{{recurringTasks.length === 0}}">
+    <text>还没有周期任务</text>
+    <text class="sub">点击下方按钮创建</text>
+  </view>
+
+  <view class="fab" bindtap="onAddTap">
+    <text class="fab-text">+</text>
+  </view>
+</view>
+
+<!-- 创建/编辑周期性任务弹层 -->
+<view class="modal-overlay" wx:if="{{showForm}}" catchtap="onCancel">
+  <view class="modal-content form-content" catchtap="">
+    <text class="modal-title">{{editingId ? '编辑' : '新建'}}周期任务</text>
+
+    <input class="input-field" placeholder="任务标题" value="{{form.title}}"
+      bindinput="onTitleInput" focus />
+
+    <textarea class="input-field textarea" placeholder="备注（可选）"
+      value="{{form.note}}" bindinput="onNoteInput" />
+
+    <!-- 规则类型选择 -->
+    <view class="form-label">重复规则</view>
+    <view class="rule-options">
+      <view class="rule-chip {{form.ruleType === 'daily' ? 'active' : ''}}"
+        data-type="daily" bindtap="onSelectRule">每天</view>
+      <view class="rule-chip {{form.ruleType === 'weekly' ? 'active' : ''}}"
+        data-type="weekly" bindtap="onSelectRule">每周</view>
+      <view class="rule-chip {{form.ruleType === 'monthly' ? 'active' : ''}}"
+        data-type="monthly" bindtap="onSelectRule">每月</view>
+    </view>
+
+    <!-- 每周 — 选星期几 -->
+    <view class="weekday-picker" wx:if="{{form.ruleType === 'weekly'}}">
+      <view class="weekday-chip {{form.selectedWeekdays.indexOf('0') > -1 ? 'active' : ''}}"
+        data-day="0" bindtap="onToggleWeekday">日</view>
+      <view class="weekday-chip {{form.selectedWeekdays.indexOf('1') > -1 ? 'active' : ''}}"
+        data-day="1" bindtap="onToggleWeekday">一</view>
+      <view class="weekday-chip {{form.selectedWeekdays.indexOf('2') > -1 ? 'active' : ''}}"
+        data-day="2" bindtap="onToggleWeekday">二</view>
+      <view class="weekday-chip {{form.selectedWeekdays.indexOf('3') > -1 ? 'active' : ''}}"
+        data-day="3" bindtap="onToggleWeekday">三</view>
+      <view class="weekday-chip {{form.selectedWeekdays.indexOf('4') > -1 ? 'active' : ''}}"
+        data-day="4" bindtap="onToggleWeekday">四</view>
+      <view class="weekday-chip {{form.selectedWeekdays.indexOf('5') > -1 ? 'active' : ''}}"
+        data-day="5" bindtap="onToggleWeekday">五</view>
+      <view class="weekday-chip {{form.selectedWeekdays.indexOf('6') > -1 ? 'active' : ''}}"
+        data-day="6" bindtap="onToggleWeekday">六</view>
+    </view>
+
+    <!-- 每月 — 几号 -->
+    <view wx:if="{{form.ruleType === 'monthly'}}">
+      <view class="form-label">日期</view>
+      <input class="input-field" type="number" placeholder="几号（1-28）" value="{{form.ruleValue}}"
+        bindinput="onDayInput" />
+    </view>
+
+    <!-- 所属清单 -->
+    <view class="form-label">所属清单（可选）</view>
+    <picker mode="selector" range="{{lists}}" range-key="name" bindchange="onPickList">
+      <view class="picker-value">{{form.listId ? '已选择' : '点击选择清单'}}</view>
+    </picker>
+
+    <view class="modal-actions">
+      <button class="btn-plain" bindtap="onCancel">取消</button>
+      <button class="btn-primary" bindtap="onSave">保存</button>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,93 @@
+.page { padding-bottom: 60rpx; }
+
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 20rpx 32rpx;
+  background: #fff;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+
+.task-item.done .task-title {
+  text-decoration: line-through;
+  color: #ccc;
+}
+
+.task-check {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  color: var(--color-primary);
+  margin-right: 16rpx;
+}
+
+.task-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-title {
+  font-size: 28rpx;
+  display: block;
+}
+
+.task-note {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 6rpx;
+  display: block;
+}
+
+.task-del {
+  font-size: 28rpx;
+  color: #ccc;
+  padding: 8rpx;
+}
+
+.add-row {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 32rpx;
+  background: #fff;
+  margin-top: 20rpx;
+}
+
+.add-icon { font-size: 32rpx; color: #ccc; margin-right: 12rpx; }
+.add-text { font-size: 26rpx; color: #999; }
+
+.add-form {
+  background: #fff;
+  padding: 24rpx 32rpx;
+  margin-top: 20rpx;
+}
+
+.form-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 16rpx;
+}
+
+button.small { font-size: 26rpx; padding: 12rpx 24rpx; margin: 0; }
+
+.textarea {
+  margin-top: 16rpx;
+  min-height: 120rpx;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  margin-bottom: 24rpx;
+  display: block;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 20rpx;
+  margin-top: 24rpx;
+}
+
+.modal-actions button { flex: 1; margin: 0; }
