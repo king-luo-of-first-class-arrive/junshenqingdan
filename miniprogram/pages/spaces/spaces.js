@@ -50,6 +50,21 @@ Page({
         app.setCurrentSpace(result.spaceId, name);
         this.setData({ showCreate: false, newSpaceName: '' });
         wx.switchTab({ url: '/pages/index/index' });
+        return;
+      }
+      // ponytail: 云函数旧版未返回 spaceId，客户端直接建
+      const openId = result.userInfo && result.userInfo.openId;
+      if (openId) {
+        const addRes = await db.collection('spaces').add({
+          data: {
+            name, type: 'shared', ownerId: openId,
+            members: [{ userId: openId, role: 'owner', joinedAt: new Date() }],
+            createdAt: new Date()
+          }
+        });
+        app.setCurrentSpace(addRes._id, name);
+        this.setData({ showCreate: false, newSpaceName: '' });
+        wx.switchTab({ url: '/pages/index/index' });
       }
     } catch (e) {
       wx.showToast({ title: '创建失败', icon: 'none' });

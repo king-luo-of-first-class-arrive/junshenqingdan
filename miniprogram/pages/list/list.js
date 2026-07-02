@@ -107,7 +107,7 @@ Page({
       title: '确认删除', content: '删除后不可恢复', success: r
     }));
     if (!res.confirm) return;
-    await db.collection('tasks').doc(id).remove();
+    await wx.cloud.callFunction({ name: 'deleteDoc', data: { collection: 'tasks', id } });
     this.fetchTasks();
   },
 

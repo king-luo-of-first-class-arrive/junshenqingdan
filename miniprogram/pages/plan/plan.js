@@ -23,8 +23,10 @@ Page({
     editingId: '',
     form: {
       title: '', note: '', priority: 0,
-      ruleType: 'daily', ruleValue: '', selectedWeekdays: [], listId: ''
+      ruleType: 'daily', ruleValue: '', selectedWeekdays: [], listId: '', listName: ''
     },
+    listOptions: [],
+    weekdayFlags: [false, false, false, false, false, false, false],
     weekdays: WEEKDAYS
   },
 
@@ -49,29 +51,37 @@ Page({
     if (!spaceId) return;
     const { data } = await db.collection('lists')
       .where({ spaceId }).orderBy('sort', 'asc').get();
-    this.setData({ lists: data });
+    this.setData({
+      lists: data,
+      listOptions: [{ _id: '', name: '不选择' }, ...data]
+    });
   },
 
   onAddTap() {
     this.setData({
       showForm: true, editingId: '',
       form: { title: '', note: '', priority: 0, ruleType: 'daily',
-        ruleValue: '', selectedWeekdays: [], listId: '' }
+        ruleValue: '', selectedWeekdays: [], listId: '', listName: '' },
+      weekdayFlags: [false, false, false, false, false, false, false]
     });
   },
 
   onEditTap(e) {
     const task = this.data.recurringTasks.find(t => t._id === e.currentTarget.dataset.id);
     if (!task) return;
+    const selectedWeekdays = task.ruleType === 'weekly'
+      ? (task.ruleValue || '').split(',').filter(Boolean) : [];
+    const flags = [false, false, false, false, false, false, false];
+    selectedWeekdays.forEach(d => { flags[parseInt(d)] = true; });
+    const list = this.data.lists.find(l => l._id === task.listId);
     this.setData({
       showForm: true, editingId: task._id,
       form: {
         title: task.title, note: task.note || '', priority: task.priority || 0,
         ruleType: task.ruleType, ruleValue: task.ruleValue || '',
-        selectedWeekdays: task.ruleType === 'weekly'
-          ? (task.ruleValue || '').split(',').filter(Boolean) : [],
-        listId: task.listId || ''
-      }
+        selectedWeekdays, listId: task.listId || '', listName: list ? list.name : ''
+      },
+      weekdayFlags: flags
     });
   },
 
@@ -84,7 +94,9 @@ Page({
     let days = [...this.data.form.selectedWeekdays];
     const idx = days.indexOf(day);
     if (idx > -1) days.splice(idx, 1); else days.push(day);
-    this.setData({ 'form.selectedWeekdays': days });
+    const flags = [...this.data.weekdayFlags];
+    flags[parseInt(day)] = !flags[parseInt(day)];
+    this.setData({ 'form.selectedWeekdays': days, weekdayFlags: flags });
   },
 
   onTitleInput(e) { this.setData({ 'form.title': e.detail.value }); },
@@ -92,8 +104,8 @@ Page({
   onDayInput(e) { this.setData({ 'form.ruleValue': e.detail.value }); },
 
   onPickList(e) {
-    const list = this.data.lists[e.detail.value];
-    this.setData({ 'form.listId': list ? list._id : '' });
+    const list = this.data.listOptions[e.detail.value];
+    this.setData({ 'form.listId': list ? list._id : '', 'form.listName': list ? list.name : '' });
   },
 
   async onSave() {
@@ -128,7 +140,7 @@ Page({
       title: '确认删除', content: '删除此周期任务？', success: r
     }));
     if (!res.confirm) return;
-    await db.collection('recurring').doc(e.currentTarget.dataset.id).remove();
+    await wx.cloud.callFunction({ name: 'deleteDoc', data: { collection: 'recurring', id: e.currentTarget.dataset.id } });
     this.fetchRecurring();
   },
 

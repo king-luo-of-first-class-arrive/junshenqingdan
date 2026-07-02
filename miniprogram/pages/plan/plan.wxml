@@ -23,9 +23,10 @@
   </view>
 </view>
 
-<!-- 创建/编辑周期性任务弹层 -->
-<view class="modal-overlay" wx:if="{{showForm}}" catchtap="onCancel">
-  <view class="modal-content form-content" catchtap="">
+<!-- 创建/编辑周期性任务弹层 — 遮罩和内容区为兄弟元素，避免事件冒泡问题 -->
+<view class="modal-wrap" wx:if="{{showForm}}">
+  <view class="modal-bg" catchtap="onCancel"></view>
+  <view class="modal-content form-content">
     <text class="modal-title">{{editingId ? '编辑' : '新建'}}周期任务</text>
 
     <input class="input-field" placeholder="任务标题" value="{{form.title}}"
@@ -47,19 +48,19 @@
 
     <!-- 每周 — 选星期几 -->
     <view class="weekday-picker" wx:if="{{form.ruleType === 'weekly'}}">
-      <view class="weekday-chip {{form.selectedWeekdays.indexOf('0') > -1 ? 'active' : ''}}"
+      <view class="weekday-chip {{weekdayFlags[0] ? 'active' : ''}}"
         data-day="0" bindtap="onToggleWeekday">日</view>
-      <view class="weekday-chip {{form.selectedWeekdays.indexOf('1') > -1 ? 'active' : ''}}"
+      <view class="weekday-chip {{weekdayFlags[1] ? 'active' : ''}}"
         data-day="1" bindtap="onToggleWeekday">一</view>
-      <view class="weekday-chip {{form.selectedWeekdays.indexOf('2') > -1 ? 'active' : ''}}"
+      <view class="weekday-chip {{weekdayFlags[2] ? 'active' : ''}}"
         data-day="2" bindtap="onToggleWeekday">二</view>
-      <view class="weekday-chip {{form.selectedWeekdays.indexOf('3') > -1 ? 'active' : ''}}"
+      <view class="weekday-chip {{weekdayFlags[3] ? 'active' : ''}}"
         data-day="3" bindtap="onToggleWeekday">三</view>
-      <view class="weekday-chip {{form.selectedWeekdays.indexOf('4') > -1 ? 'active' : ''}}"
+      <view class="weekday-chip {{weekdayFlags[4] ? 'active' : ''}}"
         data-day="4" bindtap="onToggleWeekday">四</view>
-      <view class="weekday-chip {{form.selectedWeekdays.indexOf('5') > -1 ? 'active' : ''}}"
+      <view class="weekday-chip {{weekdayFlags[5] ? 'active' : ''}}"
         data-day="5" bindtap="onToggleWeekday">五</view>
-      <view class="weekday-chip {{form.selectedWeekdays.indexOf('6') > -1 ? 'active' : ''}}"
+      <view class="weekday-chip {{weekdayFlags[6] ? 'active' : ''}}"
         data-day="6" bindtap="onToggleWeekday">六</view>
     </view>
 
@@ -72,8 +73,8 @@
 
     <!-- 所属清单 -->
     <view class="form-label">所属清单（可选）</view>
-    <picker mode="selector" range="{{lists}}" range-key="name" bindchange="onPickList">
-      <view class="picker-value">{{form.listId ? '已选择' : '点击选择清单'}}</view>
+    <picker mode="selector" range="{{listOptions}}" range-key="name" bindchange="onPickList">
+      <view class="picker-value">{{form.listName || '点击选择清单'}}</view>
     </picker>
 
     <view class="modal-actions">

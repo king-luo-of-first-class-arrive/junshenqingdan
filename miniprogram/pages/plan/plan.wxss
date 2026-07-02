@@ -36,7 +36,9 @@
 .action-btn {
   font-size: 28rpx;
   color: #ccc;
-  padding: 8rpx;
+  padding: 16rpx;
+  min-width: 60rpx;
+  text-align: center;
 }
 
 .empty {
@@ -68,7 +70,22 @@
 
 .fab-text { color: #fff; font-size: 56rpx; line-height: 1; }
 
+.modal-wrap {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.modal-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+}
 .form-content {
+  position: relative;
+  z-index: 1;
   max-height: 85vh;
   overflow-y: auto;
 }

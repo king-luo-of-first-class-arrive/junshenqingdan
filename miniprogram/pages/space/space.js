@@ -32,7 +32,7 @@ Page({
       if (space) {
         const members = space.members || [];
         const { result } = await wx.cloud.callFunction({ name: 'initUser', data: {} });
-        const openid = (result && result.openid) || '';
+        const openid = (result && result.userInfo && result.userInfo.openId) || '';
         const self = members.find(m => m.userId === openid);
         this.setData({
           space,
@@ -75,10 +75,30 @@ Page({
       wx.hideLoading();
       if (result && result.code) {
         this.setData({ inviteCode: result.code });
+        return;
       }
     } catch (e) {
       wx.hideLoading();
-      wx.showToast({ title: '生成失败', icon: 'none' });
+    }
+    // ponytail: 云函数未部署，客户端生成邀请码
+    try {
+      const { result } = await wx.cloud.callFunction({ name: 'initUser' });
+      const openId = result && result.userInfo && result.userInfo.openId;
+      if (!openId) { wx.showToast({ title: '获取用户信息失败', icon: 'none' }); return; }
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      let code = '';
+      for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+      await db.collection('invites').add({
+        data: {
+          spaceId: this.data.spaceId, code, createdBy: openId,
+          createdAt: new Date(), expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+        }
+      });
+      wx.hideLoading();
+      this.setData({ inviteCode: code });
+    } catch (e2) {
+      wx.hideLoading();
+      wx.showToast({ title: '生成失败，请检查数据库权限', icon: 'none' });
     }
   },
 
@@ -114,6 +134,23 @@ Page({
     }
   },
 
+  async onDeleteList(e) {
+    const id = e.currentTarget.dataset.id;
+    const list = this.data.lists.find(l => l._id === id);
+    const res = await new Promise(r => wx.showModal({
+      title: '确认删除',
+      content: `删除清单「${list ? list.name : ''}」及其所有任务，不可恢复。`,
+      success: r
+    }));
+    if (!res.confirm) return;
+    const { data: tasks } = await db.collection('tasks').where({ listId: id }).get();
+    await Promise.all(tasks.map(t =>
+      wx.cloud.callFunction({ name: 'deleteDoc', data: { collection: 'tasks', id: t._id } })
+    ));
+    await wx.cloud.callFunction({ name: 'deleteDoc', data: { collection: 'lists', id } });
+    this.fetchLists();
+  },
+
   async onDeleteSpace() {
     const res = await new Promise(r => wx.showModal({
       title: '确认删除',
@@ -121,7 +158,7 @@ Page({
       success: r
     }));
     if (!res.confirm) return;
-    await db.collection('spaces').doc(this.data.spaceId).remove();
+    await wx.cloud.callFunction({ name: 'deleteDoc', data: { collection: 'spaces', id: this.data.spaceId } });
     wx.showToast({ title: '已删除' });
     setTimeout(() => wx.switchTab({ url: '/pages/spaces/spaces' }), 1000);
   },
@@ -151,9 +188,10 @@ Page({
         }
       });
       console.log('[onConfirmCreateList] add result=', JSON.stringify(addRes));
-      this.setData({ showCreateList: false, newListName: '' });
+      const newList = { _id: addRes._id, spaceId, name, color: this.data.newListColor, icon: '', sort, createdAt: new Date() };
+      const lists = [...this.data.lists, newList].sort((a, b) => (a.sort || 0) - (b.sort || 0));
+      this.setData({ showCreateList: false, newListName: '', lists });
       wx.showToast({ title: '清单已创建' });
-      this.fetchLists();
     } catch (e) {
       console.error('[onConfirmCreateList] error=', e);
       wx.showToast({ title: '创建失败: ' + e.message, icon: 'none' });

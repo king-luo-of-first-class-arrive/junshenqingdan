@@ -16,7 +16,7 @@
       <text class="add-btn" bindtap="onCreateListTap">+ 新建</text>
     </view>
     <view class="list-item" wx:for="{{lists}}" wx:key="_id"
-      data-id="{{item._id}}" bindtap="onListTap">
+      data-id="{{item._id}}" bindtap="onListTap" bindlongpress="onDeleteList">
       <view class="list-dot" style="background:{{item.color}}"></view>
       <text class="list-name">{{item.name}}</text>
       <text class="arrow">›</text>
@@ -25,7 +25,7 @@
   </view>
 
   <!-- 共享空间功能 -->
-  <block wx:if="{{space && space.type === 'shared'}}">
+  <block wx:if="{{space}}">
     <view class="section">
       <text class="section-title">邀请成员</text>
       <view class="invite-row">

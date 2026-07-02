@@ -17,9 +17,10 @@
       </view>
 
       <view class="task-item {{task.done ? 'done' : ''}}"
-        wx:for="{{tasksByList[list._id].tasks}}" wx:key="_id" wx:for-item="task">
+        wx:for="{{tasksByList[list._id].tasks}}" wx:key="_id" wx:for-item="task"
+        data-id="{{task._id}}" catchlongpress="onDeleteTask">
         <view class="task-check" data-id="{{task._id}}" data-done="{{task.done}}"
-          bindtap="onToggleTask">
+          catchtap="onToggleTask">
           <text>{{task.done ? '✓' : '○'}}</text>
         </view>
         <text class="task-title">{{task.title}}</text>
@@ -38,9 +39,10 @@
       <text class="list-name">未分类</text>
     </view>
     <view class="task-item {{task.done ? 'done' : ''}}"
-      wx:for="{{tasksByList['_none'].tasks}}" wx:key="_id" wx:for-item="task">
+      wx:for="{{tasksByList['_none'].tasks}}" wx:key="_id" wx:for-item="task"
+      data-id="{{task._id}}" catchlongpress="onDeleteTask">
       <view class="task-check" data-id="{{task._id}}" data-done="{{task.done}}"
-        bindtap="onToggleTask">
+        catchtap="onToggleTask">
         <text>{{task.done ? '✓' : '○'}}</text>
       </view>
       <text class="task-title">{{task.title}}</text>
