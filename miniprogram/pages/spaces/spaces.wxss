@@ -42,6 +42,22 @@
 
 .create-text { font-size: 28rpx; color: #999; }
 
+.join-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32rpx;
+  background: #fff;
+}
+
+.join-icon {
+  font-size: 36rpx;
+  color: var(--color-primary);
+  margin-right: 12rpx;
+}
+
+.join-text { font-size: 28rpx; color: var(--color-primary); }
+
 .modal-title {
   font-size: 32rpx;
   font-weight: 600;

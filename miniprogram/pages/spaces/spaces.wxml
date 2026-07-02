@@ -17,16 +17,35 @@
     <text class="create-icon">+</text>
     <text class="create-text">新建共享空间</text>
   </view>
+
+  <view class="card join-btn" bindtap="onTapJoin">
+    <text class="join-icon">→</text>
+    <text class="join-text">通过邀请码加入空间</text>
+  </view>
 </view>
 
-<view class="modal-overlay" wx:if="{{showCreate}}">
-  <view class="modal-content">
+<!-- 新建空间弹层 -->
+<view class="modal-overlay" wx:if="{{showCreate}}" catchtap="onCancelCreate">
+  <view class="modal-content" catchtap="">
     <text class="modal-title">新建共享空间</text>
     <input class="input-field" placeholder="空间名称" value="{{newSpaceName}}"
       bindinput="onNameInput" focus />
     <view class="modal-actions">
       <button class="btn-plain" bindtap="onCancelCreate">取消</button>
       <button class="btn-primary" bindtap="onConfirmCreate">创建</button>
+    </view>
+  </view>
+</view>
+
+<!-- 加入空间弹层 -->
+<view class="modal-overlay" wx:if="{{showJoin}}" catchtap="onCancelJoin">
+  <view class="modal-content" catchtap="">
+    <text class="modal-title">输入邀请码</text>
+    <input class="input-field" placeholder="6位邀请码" value="{{joinCode}}"
+      bindinput="onJoinCodeInput" focus />
+    <view class="modal-actions">
+      <button class="btn-plain" bindtap="onCancelJoin">取消</button>
+      <button class="btn-primary" bindtap="onJoinByCode">加入</button>
     </view>
   </view>
 </view>
