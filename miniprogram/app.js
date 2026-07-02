@@ -1,6 +1,6 @@
 App({
   onLaunch() {
-    wx.cloud.init({ env: 'cloud1-0goqjr5ubc781b23' });
+    wx.cloud.init({ env: 'cloud1-d2gas6q7cabd01075' });
     this.loadCurrentSpace();
   },
 
