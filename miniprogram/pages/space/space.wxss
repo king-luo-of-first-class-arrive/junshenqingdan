@@ -14,6 +14,8 @@
 
 .section-sub { font-size: 24rpx; color: #999; }
 
+.debug-id { font-size: 20rpx; color: #ccc; word-break: break-all; }
+
 .section-header {
   display: flex;
   justify-content: space-between;

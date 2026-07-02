@@ -46,14 +46,22 @@ Page({
   },
 
   async fetchLists() {
+    const spaceId = this.data.spaceId;
+    console.log('[fetchLists] spaceId=', spaceId);
+    if (!spaceId) {
+      wx.showToast({ title: 'spaceId 为空', icon: 'none' });
+      return;
+    }
     try {
-      const { data } = await db.collection('lists')
-        .where({ spaceId: this.data.spaceId })
+      const res = await db.collection('lists')
+        .where({ spaceId })
         .orderBy('sort', 'asc')
         .get();
-      this.setData({ lists: data });
+      console.log('[fetchLists] result=', JSON.stringify(res.data));
+      this.setData({ lists: res.data });
     } catch (e) {
-      wx.showToast({ title: '加载清单失败，请检查数据库权限', icon: 'none' });
+      console.error('[fetchLists] error=', e);
+      wx.showToast({ title: '加载清单失败: ' + e.message, icon: 'none' });
     }
   },
 
@@ -125,14 +133,16 @@ Page({
   async onConfirmCreateList() {
     const name = this.data.newListName.trim();
     if (!name) return;
+    const spaceId = this.data.spaceId;
+    console.log('[onConfirmCreateList] spaceId=', spaceId, 'name=', name);
     try {
       const { data: existing } = await db.collection('lists')
-        .where({ spaceId: this.data.spaceId }).orderBy('sort', 'desc').limit(1).get();
+        .where({ spaceId }).orderBy('sort', 'desc').limit(1).get();
       const sort = existing.length > 0 ? (existing[0].sort || 0) + 1.0 : 1.0;
 
-      await db.collection('lists').add({
+      const addRes = await db.collection('lists').add({
         data: {
-          spaceId: this.data.spaceId,
+          spaceId,
           name,
           color: this.data.newListColor,
           icon: '',
@@ -140,11 +150,13 @@ Page({
           createdAt: new Date()
         }
       });
+      console.log('[onConfirmCreateList] add result=', JSON.stringify(addRes));
       this.setData({ showCreateList: false, newListName: '' });
       wx.showToast({ title: '清单已创建' });
       this.fetchLists();
     } catch (e) {
-      wx.showToast({ title: '创建失败，请检查数据库权限', icon: 'none' });
+      console.error('[onConfirmCreateList] error=', e);
+      wx.showToast({ title: '创建失败: ' + e.message, icon: 'none' });
     }
   },
 
